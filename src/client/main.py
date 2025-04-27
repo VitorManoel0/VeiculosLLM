@@ -7,6 +7,10 @@ from src.client.llm_integration import sampling_handler
 from src.models.vehicle_model import VehicleModel
 from src.server.mcp_server import mcp as mcp_server
 from src.server.process_request import execute_raw_sql
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 OLLAMA_MODEL = getenv("OLLAMA_MODEL")

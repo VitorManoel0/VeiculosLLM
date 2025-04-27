@@ -2,6 +2,9 @@ from os import getenv
 
 from fastmcp.client.sampling import SamplingMessage, SamplingParams
 from ollama import AsyncClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 OLLAMA_MODEL = getenv("OLLAMA_MODEL")
 
