@@ -1,0 +1,109 @@
+from rich.console import Console
+from rich.table import Table
+import sys
+import os
+
+from src.client.main import MCPOpenAIClient
+
+# Adiciona o diretório raiz do projeto ao PYTHONPATH
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
+
+from src.models.vehicle_model import VehicleModel
+
+console = Console()
+
+
+async def start_agent(client: MCPOpenAIClient):
+    """Start the virtual agent with MCP client support.
+
+    Args:
+        client: MCP client instance.
+    """
+
+    console.print(
+        "[green]Olá sou seu assistente de busca ao carro desejado, o que você procurar?[/]"
+    )
+
+    while True:
+        user_input = input("Você: ")
+        if ("sair" or "exit") in user_input.lower():
+            break
+        console.print("[yellow]Buscando...[/]")
+
+        response = await client.process_query(user_input)
+
+        display_results(response)
+
+        console.print(
+            "[bold green]Agente Virtual:[/] Caso queira uma busca mais detalhada tente informar mais campos que deseja"
+        )
+
+
+def display_results(vehicles: list[VehicleModel]):
+    """Print a list of vehicles on table format."""
+    if not vehicles:
+        console.print("[bold orange]Nenhum resultado para exibir.[/]")
+        console.print(
+            "[bold red]bold orange:[/] Não conseguir achar nenhum veículos com base na sua pesquisa."
+        )
+        return
+
+    table = Table(title="Resultados da Busca")
+
+    expected_columns = [
+        "Marca",
+        "Modelo",
+        "Ano",
+        "Motor",
+        "Combustivel",
+        "Cor",
+        "Quilometragem",
+        "Portas",
+        "Cambio",
+        "Preço",
+        "Categoria",
+        "Data de fabricação",
+    ]
+
+    for col_name in expected_columns:
+        table.add_column(col_name)
+
+    for vehicle in vehicles:
+        try:
+            brand = vehicle.marca
+            model = vehicle.modelo
+            year = str(vehicle.ano)
+            engine = vehicle.motor
+            fuel = vehicle.combustivel
+            color = vehicle.cor
+            miles = vehicle.quilometragem
+            doors = vehicle.portas
+            gearbox = vehicle.categoria
+            price = vehicle.preco
+            price_str = f"R$ {price:.2f}" if isinstance(price, (int, float)) else "N/A"
+            category = vehicle.categoria
+            date_of_manufacture = vehicle.data_fabricacao
+
+            table.add_row(
+                brand,
+                model,
+                year,
+                engine,
+                fuel,
+                color,
+                str(miles),
+                str(doors),
+                gearbox,
+                price_str,
+                category,
+                str(date_of_manufacture),
+            )
+        except Exception as row_e:
+            console.print(
+                f"[bold red]Erro ao processar linha da tabela:[/]{row_e} - Dados: {vehicle}"
+            )
+            table.add_row("Erro" * (len(expected_columns) - 1))
+
+    console.print(table)
