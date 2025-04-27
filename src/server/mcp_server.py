@@ -30,7 +30,7 @@ async def generate_json(user_input: str, context: Context) -> dict:
                         - combustivel: tipo de combustível (ex: 'Gasolina', 'Flex')
                         - cor: cor do veículo (ex: 'Azul', 'Preto')
                         - quilometragem: quilometragem do veículo (ex: 30000)
-                        - qtd_portas: quantidade de portas (ex: 2, 4)
+                        - portas: quantidade de portas (ex: 2, 4)
                         - cambio: tipo de câmbio (ex: 'Manual', 'Automático')
                         - categoria: categoria do veículo (ex: 'Sedan', 'SUV')
                         - data_de_fabricacao: data de fabricação do veículo (ex: '2022-01-15')

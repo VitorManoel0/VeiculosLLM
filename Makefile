@@ -1,3 +1,10 @@
+# Include .env file
+include .env
+export
+
+# Default values for environment variables
+OLLAMA_MODEL ?= llama3.1:8b
+
 lint:
 	ruff format .
 	ruff check . --fix
@@ -16,7 +23,7 @@ start-agent-windows:
 
 run-docker:
 	docker compose up -d
-	docker exec -it veiculosllm-ollama-1 ollama pull llama3.1:8b
+	docker exec -it veiculosllm-ollama-1 ollama pull $(OLLAMA_MODEL)
 
 build-app:
 	docker compose build app
@@ -28,7 +35,9 @@ enter-container:
 	docker compose run --rm --service-ports app /bin/bash
 
 run-all:
+	#make run-docker && make build-app && make run-app
 	make run-docker && make run-app
+
 
 cleanup:
 	docker compose down -v

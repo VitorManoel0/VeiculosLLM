@@ -8,7 +8,7 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     environment:
-      - OLLAMA_MODEL=llama3.1:8b
+      - OLLAMA_MODEL=${OLLAMA_MODEL}
     networks:
       - app-network
 
@@ -21,8 +21,9 @@ services:
     volumes:
       - .:/app
     environment:
-      - OLLAMA_MODEL=llama3.1:8b
       - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL}
+
     depends_on:
       - ollama
     networks:

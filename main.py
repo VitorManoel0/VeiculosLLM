@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from rich.console import Console
 
@@ -15,6 +16,7 @@ db_populator = db_session.db_session
 
 async def main():
     # Initialize and populate database
+    os.system("clear")
     db_populator.clean_database()  # Clear existing data
     db_populator.seed_database()  # Populate with new data
     try:

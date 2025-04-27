@@ -30,8 +30,10 @@ async def sampling_handler(
     ]
 
     try:
-        response = await ollama_client.chat(model=OLLAMA_MODEL, messages=formatted_messages)
+        response = await ollama_client.chat(
+            model=OLLAMA_MODEL, messages=formatted_messages
+        )
         return response.message.content
     except Exception as e:
-        print(f"Error connecting to Ollama at {OLLAMA_HOST}: {str(e)}")
+        print(f"Erro ao conectar ao Ollama em {OLLAMA_HOST}: {str(e)}")
         raise
