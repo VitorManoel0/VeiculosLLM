@@ -20,4 +20,3 @@ class Vehicle(Base):
     cambio = Column(String, nullable=False)
     preco = Column(Float, nullable=False)
     categoria = Column(String, nullable=False)
-    data_fabricacao = Column(Date, nullable=False)

@@ -23,16 +23,18 @@ async def start_agent(client: MCPOpenAIClient):
     """
 
     console.print(
-        "[green]Olá sou seu assistente de busca ao carro desejado, o que você procurar?[/]"
+        f"[green]Olá sou seu assistente de busca ao carro desejado. o que você deseja procurar?[/]\n"
+        f"[orange]Caso queira sair a qualquer momento voce pode digitar sair ou exit[/]",
+
     )
 
     while True:
         user_input = input("Você: ")
         if ("sair" or "exit") in user_input.lower():
             break
-        console.print("[yellow]Buscando...[/]")
 
-        response, text_ = await client.process_query(user_input)
+        with console.status("[yellow]Buscando...[/]", spinner="line"): # Você pode mudar "line" para outro spinner se preferir (ex: "dots", "dots2", etc.)
+            response, text_ = await client.process_query(user_input)
 
         display_results(response)
 
@@ -62,7 +64,6 @@ def display_results(vehicles: list[VehicleModel]):
         "Cambio",
         "Preço",
         "Categoria",
-        "Data de fabricação",
     ]
 
     for col_name in expected_columns:
@@ -78,11 +79,10 @@ def display_results(vehicles: list[VehicleModel]):
             color = vehicle.cor
             miles = vehicle.quilometragem
             doors = vehicle.portas
-            gearbox = vehicle.categoria
+            gearbox = vehicle.cambio
             price = vehicle.preco
             price_str = f"R$ {price:.2f}" if isinstance(price, (int, float)) else "N/A"
             category = vehicle.categoria
-            date_of_manufacture = vehicle.data_fabricacao
 
             table.add_row(
                 brand,
@@ -96,7 +96,6 @@ def display_results(vehicles: list[VehicleModel]):
                 gearbox,
                 price_str,
                 category,
-                str(date_of_manufacture),
             )
         except Exception as row_e:
             console.print(

@@ -16,11 +16,16 @@ async def generate_json(user_input: str, context: Context) -> Dict[str, any]:
                     você deve procurar valores no input que se encaixe nos seguintes campos presentes no filters
                     responda apenas com o json de resposta
                     
+                    Preste atenção ao input para diferenciar os campos data_de_fabricacao e ano são duas colunas diferentes
+                    
                     caso os campos for [ano, preco, quilometragem, qtd_portas, data_de_fabricacao] identificado que o valor:
                      - deve ser maior ou igual use como do exemplo: {"ano": "$gte: 2015"}
                      - deve ser maior use algo como do exemplo: {"ano": "$gt: 2015"}
                      - deve ser menor ou igual use como do exemplo: {"ano": "$lte: 2015"}
                      - deve ser menor use como do exemplo: {"ano": "$lt: 2015"}
+                     
+                    caso os campos seja 'marca','modelo','motor','combustivel','cor','cambio','categoria'
+                     - deve ser como o exemplo {campo: $like: valor}
                     
                     filters: Um dicionário com os critérios de filtro. Os campos possíveis são:
                         - marca: marca do veículo (ex: 'Fiat', 'Volkswagen')
@@ -34,7 +39,6 @@ async def generate_json(user_input: str, context: Context) -> Dict[str, any]:
                         - portas: quantidade de portas (ex: 2, 4)
                         - cambio: tipo de câmbio (ex: 'Manual', 'Automático')
                         - categoria: categoria do veículo (ex: 'Sedan', 'SUV')
-                        - data_de_fabricacao: data de fabricação do veículo (ex: '2022-01-15')
                         
                         
                     caso não for identificado nenhum campo diferente de null, apenas um dicionário vazio assim: {}
@@ -75,8 +79,6 @@ async def generate_sql_select(json_car_filters: Dict, context: Context) -> str:
         :param context:
         :param json_car_filters:
     """
-
-    # TODO: Adicionar %like em consultas em determinados campos
 
     response = await context.sample(
         f"Crie uma query de SELECT com seguinte input: {json_car_filters}",

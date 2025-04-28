@@ -71,9 +71,6 @@ class DatabaseSession:
             cambio=random.choice(cls._gearbox_options),
             categoria=random.choice(cls._category_options),
             preco=round(random.uniform(50000, 400000), 2),
-            data_fabricacao=cls._fake.date_between(
-                start_date=datetime(2000, 1, 1), end_date="today"
-            ),
         )
 
     @classmethod

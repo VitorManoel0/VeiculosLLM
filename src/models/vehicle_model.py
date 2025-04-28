@@ -15,6 +15,5 @@ class VehicleModel(BaseModel):
     cambio: str = Field(..., description="Tipo de câmbio")
     preco: float = Field(..., description="Preço do veículo")
     categoria: str = Field(..., description="Categoria do veículo")
-    data_fabricacao: date = Field(..., description="Data de fabricação")
 
     model_config = {"from_attributes": True}
