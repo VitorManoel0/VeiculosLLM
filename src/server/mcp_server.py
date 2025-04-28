@@ -1,4 +1,5 @@
 import json
+from typing import Dict, Tuple
 
 from fastmcp import FastMCP, Context
 
@@ -6,7 +7,7 @@ mcp = FastMCP("Car search assistant")
 
 
 @mcp.tool()
-async def generate_json(user_input: str, context: Context) -> dict:
+async def generate_json(user_input: str, context: Context) -> Dict[str, any]:
     """Gerar um json com os valores que servirão de filtro para os carros"""
 
     response = await context.sample(
@@ -44,7 +45,7 @@ async def generate_json(user_input: str, context: Context) -> dict:
 
 
 @mcp.tool()
-async def generate_sql_select(json_car_filters: dict, context: Context) -> str:
+async def generate_sql_select(json_car_filters: Dict, context: Context) -> str:
     """
     Gera uma query SQL SELECT baseada nos filtros de carro fornecidos.
 
@@ -71,6 +72,7 @@ async def generate_sql_select(json_car_filters: dict, context: Context) -> str:
         {"cor": "$eq: Azul"} → "SELECT * FROM vehicle WHERE cor = 'Azul'"
         {"ano": "$gte: 2020"} → "SELECT * FROM vehicle WHERE ano >= 2020"
         {"modelo": "$like: Gol"} → "SELECT * FROM vehicle WHERE modelo LIKE '%Gol%'"
+        :param context:
         :param json_car_filters:
     """
 
@@ -95,6 +97,36 @@ async def generate_sql_select(json_car_filters: dict, context: Context) -> str:
                         os filtros fornecidos. Para múltiplos filtros, conecte-os com AND.
                         
                         Responda APENAS com a query SQL completa, sem explicações adicionais.
+                    """,
+    )
+    return response.text
+
+
+@mcp.tool()
+async def generate_prompt_request(properties: Tuple, context: Context) -> str:
+    """ """
+
+    properties, properties_exist = properties
+
+    response = await context.sample(
+        f"Informe ao usuario que para ter uma resposta mais direta e completa ele deverá fornecer mais "
+        f"infomações e essas informações poderá ser qualquer um dos campos prensentes nessa lista {str(set(properties)-set(properties_exist))} e "
+        f"peça novamente as opções que ele já enviou, que são os campos presentes nesta lista: {str(properties_exist)}",
+        system_prompt="""
+                        Você é um assistente que procura carros presentes dentro de um SQLite.
+                        
+                        peça para ele adicionar mais informações e repetir oque já foi passado mais as perguntas que 
+                        serão feitas"
+                        
+                        O input será uma lista com campos que você devera fazer as perguntas.
+                        
+                        o output sempre deverá conter o lembrete de que ele tem que repetir os campos já informados 
+
+                        faça perguntas solicitando sempre os campos, caso não foi informado nenhuma informação na lista
+                        retorne apenas a pergunta pedindo informações sobre o carro de acordo com os campos, que você 
+                        teve contexto
+                        
+                        me retorne apenas a pergunta sem informar que está retonando algo                    
                     """,
     )
     return response.text

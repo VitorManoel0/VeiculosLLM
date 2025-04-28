@@ -32,13 +32,11 @@ async def start_agent(client: MCPOpenAIClient):
             break
         console.print("[yellow]Buscando...[/]")
 
-        response = await client.process_query(user_input)
+        response, text_ = await client.process_query(user_input)
 
         display_results(response)
 
-        console.print(
-            "[bold green]Agente Virtual:[/] Caso queira uma busca mais detalhada tente informar mais campos que deseja"
-        )
+        console.print(f"[bold green]Agente Virtual:[/] {text_[0].text}")
 
 
 def display_results(vehicles: list[VehicleModel]):

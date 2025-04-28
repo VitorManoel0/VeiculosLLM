@@ -1,8 +1,6 @@
-# Include .env file
 include .env
 export
 
-# Default values for environment variables
 OLLAMA_MODEL ?= llama3.1:8b
 
 lint:
@@ -35,8 +33,7 @@ enter-container:
 	docker compose run --rm --service-ports app /bin/bash
 
 run-all:
-	#make run-docker && make build-app && make run-app
-	make run-docker && make run-app
+	make run-docker && make build-app && make run-app
 
 
 cleanup:

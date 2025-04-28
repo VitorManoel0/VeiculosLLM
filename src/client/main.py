@@ -1,3 +1,4 @@
+import json
 from os import getenv
 from typing import List
 
@@ -44,7 +45,7 @@ class MCPOpenAIClient:
             await self.client.__aexit__(None, None, None)
             self.client = None
 
-    async def process_query(self, query: str) -> List[VehicleModel]:
+    async def process_query(self, query: str) -> (List[VehicleModel], str):
         """Process a query using Ollama and available MCP tools.
 
         Args:
@@ -53,6 +54,14 @@ class MCPOpenAIClient:
         Returns:
             List of vehicle models.
         """
+
+        properties = set(
+            [
+                key
+                for key in json.loads(VehicleModel.schema_json())["properties"].keys()
+                if key != "id"
+            ]
+        )
 
         # Generate a Json with keys is a filter to search car
         json_car_filters = await self.client.call_tool(
@@ -66,4 +75,14 @@ class MCPOpenAIClient:
 
         response = execute_raw_sql(raw_query[0].text)
 
-        return response
+        texto = await self.client.call_tool(
+            "generate_prompt_request",
+            {
+                "properties": (
+                    properties,
+                    set(json.loads(json_car_filters[0].text).keys()),
+                )
+            },
+        )
+
+        return response, texto
