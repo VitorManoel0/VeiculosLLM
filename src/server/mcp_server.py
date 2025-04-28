@@ -18,7 +18,7 @@ async def generate_json(user_input: str, context: Context) -> Dict[str, any]:
                     
                     Preste atenção ao input para diferenciar os campos data_de_fabricacao e ano são duas colunas diferentes
                     
-                    caso os campos for [ano, preco, quilometragem, qtd_portas, data_de_fabricacao] identificado que o valor:
+                    caso os campos for [ano, preco, quilometragem, portas, data_de_fabricacao] identificado que o valor:
                      - deve ser maior ou igual use como do exemplo: {"ano": "$gte: 2015"}
                      - deve ser maior use algo como do exemplo: {"ano": "$gt: 2015"}
                      - deve ser menor ou igual use como do exemplo: {"ano": "$lte: 2015"}

@@ -131,9 +131,6 @@ Ao finalizar tudo para remover os containêrs:
 ```bash
   docker-compose down -v
 ```
-## Prints
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
